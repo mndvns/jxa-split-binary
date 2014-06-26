@@ -1,0 +1,34 @@
+(ns jxa-split-binary
+  (require erlang)
+  (require lists)
+  (require (joxa-lists :as jlists))
+  )
+
+(defn compile-cases (func delim ceiling)
+  (jlists/map
+   (n (lists/seq 1 ceiling))
+   `(<<(b :size ~n :binary) (~delim :size 8) (rest :binary)>>
+       (~func rest (cons b acc)))))
+
+(defmacro+ defsplit (func delim ceiling)
+  (let*
+      (cases (compile-cases func delim ceiling))
+    `(do
+
+       (defn ~func (str acc)
+         (case str
+           (<<>>
+            (lists/reverse acc))
+           (<<(~delim :size 8) (rest :binary)>>
+              (~func rest (cons <<>> acc)))
+           ~@cases
+           (_
+            (when
+                (erlang/< (erlang/byte_size str) ~ceiling))
+            (lists/reverse (cons str acc)))))
+
+       (defn+ ~func (str)
+         (case str
+           (<<(~delim :size 8) (rest :binary)>>
+              (~func rest []))
+           (_ :badpath))))))

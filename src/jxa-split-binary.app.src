@@ -1,0 +1,11 @@
+{application, 'jxa-split', [
+  {description, "split a RFC2396 compatible path"},
+  {vsn, "0.1.0"},
+  {modules, []},
+  {registered, []},
+  {applications, [
+    kernel,
+    stdlib
+  ]},
+  {env, []}
+]}.

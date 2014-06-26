@@ -1,0 +1,5 @@
+(ns jxa-split-binary-test
+  (use jxa-split-binary)
+  )
+
+(defsplit foobar \/ 20)
