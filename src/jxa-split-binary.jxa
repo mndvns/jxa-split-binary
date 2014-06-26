@@ -28,7 +28,4 @@
             (lists/reverse (cons str acc)))))
 
        (defn+ ~func (str)
-         (case str
-           (<<(~delim :size 8) (rest :binary)>>
-              (~func rest []))
-           (_ :badpath))))))
+         (~func str [])))))
